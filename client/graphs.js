@@ -25,36 +25,21 @@ red.attachSchema(new SimpleSchema({ _id: { type: String, autoValue: function() {
 red.attachGraph();
 editor.queries.insert({ collection: '/graphs:red', color: 'red', name: 'red', query: {} });
 
-console.log('white.insert({});');
-console.log(white.insert({}));
-console.log('white.insert({});');
-console.log(white.insert({}));
-console.log('white.insert({});');
-console.log(white.insert({}));
-console.log('white.insert({});');
-console.log(white.insert({}));
-console.log('white.insert({});');
-console.log(white.insert({}));
+white.insert({});
+white.insert({});
+white.insert({});
+white.insert({});
+white.insert({});
 
-console.log('black.insert({});');
-console.log(black.insert({}));
-console.log('black.insert({});');
-console.log(black.insert({}));
-console.log('black.insert({});');
-console.log(black.insert({}));
-console.log('black.insert({});');
-console.log(black.insert({}));
-console.log('black.insert({});');
-console.log(black.insert({}));
+black.insert({});
+black.insert({});
+black.insert({});
+black.insert({});
+black.insert({});
 
-console.log('blue.link.insert(white.find().fetch()[2], black.find().fetch()[1]);');
-console.log(blue.link.insert(white.find().fetch()[2], black.find().fetch()[1]));
-
-console.log('red.link.insert(black.find().fetch()[1], white.find().fetch()[4]);');
-console.log(red.link.insert(black.find().fetch()[1], black.find().fetch()[4]));
-
-console.log('green.link.insert(white.find().fetch()[3], white.find().fetch()[0]);');
-console.log(green.link.insert(white.find().fetch()[3], white.find().fetch()[0]));
+blue.link.insert(white.find().fetch()[2], black.find().fetch()[1]);
+red.link.insert(black.find().fetch()[1], black.find().fetch()[4]);
+green.link.insert(white.find().fetch()[3], white.find().fetch()[0]);
 
 Template['/graphs'].onRendered(function() {
 	lodash.each(editor.queries.find().fetch(), function(query) {

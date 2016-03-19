@@ -51,27 +51,17 @@ red.after.link.target(function(userId, unlinked, linked, fieldNames, modifier, o
 	}
 });
 
-console.log('white.insert({});');
-console.log(white.insert({}));
-console.log('white.insert({});');
-console.log(white.insert({}));
-console.log('white.insert({});');
-console.log(white.insert({}));
-console.log('white.insert({});');
-console.log(white.insert({}));
-console.log('white.insert({});');
-console.log(white.insert({}));
+white.insert({});
+white.insert({});
+white.insert({});
+white.insert({});
+white.insert({});
 
-console.log('black.insert({});');
-console.log(black.insert({}));
-console.log('black.insert({});');
-console.log(black.insert({}));
-console.log('black.insert({});');
-console.log(black.insert({}));
-console.log('black.insert({});');
-console.log(black.insert({}));
-console.log('black.insert({});');
-console.log(black.insert({}));
+black.insert({});
+black.insert({});
+black.insert({});
+black.insert({});
+black.insert({});
 
 Template['/selection'].onRendered(function() {
 	lodash.each(editor.queries.find().fetch(), function(query) {
