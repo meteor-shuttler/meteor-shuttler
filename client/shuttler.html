@@ -365,9 +365,13 @@ blue.link.insert(white.findOne('1'), white.findOne('2'));
 var temp = red.link.insert(black.findOne('7'), white.findOne('1'));
 // As you can see green have lost the ability to select 1 and 2.
 
+// Insert blue path for last red selection from 2 to 3.
+blue.link.insert(white.findOne('2'), white.findOne('3'));
+// Congratulations! White 3 selected automatically!
+
 // Move red link from 1 to 2
 red.link.update.target(temp, black.findOne('6'));
-// You see? Green selection again select 1 and 2!
+// You see? Green selection again select 1, 2 and 3!
 ```
 {{/markdown}}
 			</div>
