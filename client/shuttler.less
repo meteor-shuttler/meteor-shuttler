@@ -1,0 +1,48 @@
+@import "bootstrap-mixins.less";
+
+body {
+	background-image: url(/blueprint.png);
+    background-position-y: 50px;
+    background-attachment: fixed;
+    overflow-x: hidden;
+    zoom: 1;
+}
+
+p {
+	margin: 0;
+}
+
+svg {
+	.user-select(none);
+}
+
+pre {
+	code {
+		display: block;
+		border: 0 !important;
+		padding: 10px !important;
+	}
+	padding: 0;
+	margin: 0;
+}
+
+.navbar {
+	margin: 0;
+}
+
+.opacity-0 {
+	.opacity(0);
+}
+
+.document {
+	z-index: 1;
+	position: relative;
+}
+
+.background {
+	z-index: 0;
+	position: fixed;
+	top: 0; left: 0;
+	width: 100%; height: 100%;
+	#gradient >.vertical(fade(#1C4460, 80%), fade(#383141, 80%));
+}

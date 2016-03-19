@@ -1,0 +1,377 @@
+<head>
+	<title>shuttler</title>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.js"></script>
+	<link href='https://fonts.googleapis.com/css?family=Quicksand' rel='stylesheet' type='text/css'>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<template name="/">
+	<div class="background"></div>
+	<div>
+		{{> navbar class="navbar-inverse navbar-fixed-top hidden-xs"}}
+		{{> navbar class="navbar-inverse visible-xs-block"}}
+		{{> stars}}
+		<table style="position: absolute; width: 100%; height: 100%;">
+			<tr>
+				<td>
+					<img src="/shuttler.png" class="center-block img-responsive">
+					<div class="text-center" style="color: white; position: relative; text-shadow: 0 0 40px #203557;">
+						<h1>SHUTTLER</h1>
+						<p>Build graphs of documents that are a delight to use,<br>faster than you ever thought possible</p>
+					</div>
+					<div style="position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; color: #A1A0A5;">
+						With love <i class="glyphicon glyphicon-heart text-danger"></i> from Russia
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</template>
+
+<template name="/graphs">
+	<div class="background"></div>
+	<div class="document">
+		{{> navbar class="navbar-default navbar-fixed-top hidden-xs"}}
+		{{> navbar class="navbar-default opacity-0 hidden-xs"}}
+		{{> navbar class="navbar-default visible-xs-block"}}
+		<div class="container text-center">
+			<h1>shuttler:graphs <a href="https://github.com/meteor-shuttler/graphs"><i class="fa fa-fw fa-github"></i></a></h1>
+			<p>Oriented graph methods with shema and restrictions.</p>
+		</div>
+		<div class="well well-sm">
+			<div class="container text-center">
+				User-friendly interface methods, helpers, hooks and restrictions to control the links in meteor mongo.
+			</div>
+		</div>
+		<div class="container">
+			<h2 class="text-center">Theory</h2>
+			<h4>Documents <i class="fa fa-circle"></i></h4>
+			<div class="well well-sm">
+				<p>With <kbd><a href="https://github.com/meteor-shuttler/ref">shuttler:ref</a></kbd> package, any document can be in graph.</p>
+			</div>
+			<h4>Links <i class="fa fa-circle-o"></i><i class="fa fa-long-arrow-right" style="position: relative; left: 0.35em;"></i><i class="fa fa-circle"></i><i class="fa fa-long-arrow-right" style="position: relative; right: 0.25em;"></i><i class="fa fa-circle-o"></i></h4>
+			<div class="well well-sm">
+				<p>The documents in graph-collection called links.</p>
+				<p>They always have 2 field-references: <kbd>link._source</kbd> and <kbd>link._target</kbd>.</p>
+				<p>Link is also a document, and to it can also be referenced.</p>
+				<p>There are no restrictions on the creation of your custom fields in the graph collections. It is only necessary to attach schema using <a href="https://github.com/aldeed/meteor-collection2">aldeed:collection2</a> package.</p>
+			</div>
+		</div>
+		<div class="container">
+			<h2 class="text-center">Practice</h2>
+			<h4>Attach</h4>
+			<div class="well well-sm">
+{{# markdown}}
+```js
+links = new Mongo.Collection('links');
+links.attachGraph();
+```
+{{/markdown}}
+			</div>
+		</div>
+		<div class="container">
+			<h4>References </h4>
+			<div class="well well-sm">
+				<p>As a reference for the creation of communication can act as a `Rel` document and the document itself.</p>
+{{# markdown}}
+```js
+documents = new Mongo.Collection('documents');
+var a = documents.findOne(documents.insert({ _id: '1' }));
+var b = documents.findOne(documents.insert({ _id: '2' }));
+links.link.insert(a, b);
+var link = links.link.insert(a.Ref(), b.Ref());
+links.link.update(link, b, a);
+```
+{{/markdown}}
+				<br>
+				<ul>
+					<li><kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkinsert">links.link.insert</a></kbd></li>
+					<li><kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkupdate">links.link.update</a></kbd></li>
+				</ul>
+			</div>
+		</div>
+		<div class="container">
+			<h4>Helpers <a href="https://github.com/meteor-shuttler/graphs#helpers"><i class="fa fa-fw fa-github"></i></a></h4>
+			<div class="well well-sm">
+				<p>For ease of reference, you can use helpers: <kbd>a<a href="https://github.com/meteor-shuttler/graphs#documentsource">link.source()</a></kbd> and <kbd><a href="https://github.com/meteor-shuttler/graphs#documenttarget">link.target()</a></kbd>. They return a document that is referenced by this field from any collection.</p>
+{{# markdown}}
+```js
+var link = links.link.find(a, b);
+link.source();
+// { _id: '1' }
+link.target();
+// { _id: '2' }
+```
+{{/markdown}}
+			</div>
+		</div>
+		<div class="container">
+			<h4>Searching <a href="https://github.com/meteor-shuttler/graphs#collectionlinkfind"><i class="fa fa-fw fa-github"></i></a></h4>
+			<div class="well well-sm">
+				<p>Handy methods for finding links.</p>
+{{# markdown}}
+```js
+links.link.find(a, b);
+// { _id: String, _source: { id: '1', collection: 'documents' }, _source: { id: '2', collection: 'documents' } }
+links.link.find(a.Ref(), b.Ref());
+// { _id: String, _source: { id: '1', collection: 'documents' }, _source: { id: '2', collection: 'documents' } }
+links.link.find('1', '2');
+// { _id: String, _source: { id: '1', collection: 'documents' }, _source: { id: '2', collection: 'documents' } }
+links.links.find('1', '2').count();
+// 2
+links.links.find.target(b);
+// { _id: String, _source: { id: '1', collection: 'documents' }, _source: { id: '2', collection: 'documents' } }
+```
+{{/markdown}}
+				<br>
+				<ul>
+					<li><kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfind">links.link.find</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindto">links.link.find.to</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindtarget">links.link.find.target</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindfrom">links.link.find.from</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindsource">links.link.find.source</a></kbd></li>
+					<li><kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfind">links.link.findOne</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindto">links.link.findOne.to</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindtarget">links.link.findOne.target</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindfrom">links.link.findOne.from</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindsource">links.link.findOne.source</a></kbd></li>
+					<li><kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinksfind">links.links.find</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinksfindto">links.links.find.to</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinksfindtarget">links.links.find.target</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinksfindfrom">links.links.find.from</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinksfindsource">links.links.find.source</a></kbd></li>
+				</ul>
+			</div>
+		</div>
+		<div class="container">
+			<h4>Hooks <a href="https://github.com/meteor-shuttler/graphs#hooks"><i class="fa fa-fw fa-github"></i></a></h4>
+			<div class="well well-sm">
+				<p>With <kbd><a href="https://github.com/matb33/meteor-collection-hooks">matb33:collection-hooks</a></kbd> package you can listen to the changes immediately after they are made.</p>
+{{# markdown}}
+```js
+links.after.link(function(userId, unlinked, linked, fieldNames, modifier, options) {
+	console.log(unlinked, linked);
+});
+var link = links.link.insert(a, b);
+// String
+// undefined, { _id: String, _source: { id: '1', collection: 'documents' }, _source: { id: '2', collection: 'documents' } }
+links.link.update(link, b, a);
+// 1
+// { _id: String, _source: { id: '1', collection: 'documents' }, _source: { id: '2', collection: 'documents' } }, { _id: String, _source: { id: '2', collection: 'documents' }, _source: { id: '1', collection: 'documents' } }
+links.remove(link._id);
+// 1
+// { _id: String, _source: { id: '2', collection: 'documents' }, _source: { id: '1', collection: 'documents' } }, undefined
+```
+{{/markdown}}
+				<br>
+				<ul>
+					<li><kbd><a href="https://github.com/meteor-shuttler/graphs#collectionafterunlink">links.after.link</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionafterlinksource">links.after.link.source</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionafterlinktarget">links.after.link.target</a></kbd></li>
+					<li><kbd><a href="https://github.com/meteor-shuttler/graphs#collectionafterunlink">links.after.unlink</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionafterunlinksource">links.after.unlink.source</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionafterunlinktarget">links.after.unlink.target</a></kbd></li>
+				</ul>
+			</div>
+		</div>
+		<div class="container text-center">
+			<h2>Example</h2>
+		</div>
+		<div class="well well-sm">
+			<div class="container">
+				The playground for experimentation on graphs. All collections are available in the browser console, under the same names. You can perform any operations with them! Code of generated documents and links was printed to the console. You can try any methods/hooks/helpers.
+				<h4>Definition of collections and graphs in this playground:</h4>
+{{#markdown}}
+```js
+var white = new Mongo.Collection(null, { ref: '/graphs:white' });
+
+var black = new Mongo.Collection(null, { ref: '/graphs:black' });
+
+var blue = new Mongo.Collection(null, { ref: '/graphs:blue' });
+blue.attachGraph();
+
+var green = new Mongo.Collection(null, { ref: '/graphs:green' });
+green.attachGraph();
+
+var red = new Mongo.Collection(null, { ref: '/graphs:red' });
+red.attachGraph();
+```
+{{/markdown}}
+				<h4>You can start with these functions:</h4>
+{{#markdown}}
+```js
+blue.link.insert(white.findOne('5'), black.findOne('6'));
+red.link.insert(red.findOne('12'), white.findOne('2'));
+green.remove('13');
+```
+{{/markdown}}
+			</div>
+		</div>
+		{{> shuttlerEditor editor=editor}}
+	</div>
+</template>
+
+<template name="/selection">
+	<div class="background"></div>
+	<div class="document">
+		{{> navbar class="navbar-default navbar-fixed-top hidden-xs"}}
+		{{> navbar class="navbar-default opacity-0 hidden-xs"}}
+		{{> navbar class="navbar-default visible-xs-block"}}
+		<div class="container text-center">
+			<h1>shuttler:selection<a href="https://github.com/meteor-shuttler/selection"><i class="fa fa-fw fa-github"></i></a></h1>
+		</div>
+		<div class="container">
+			<h2 class="text-center">Theory</h2>
+			<h4>Paths <i class="fa fa-minus"></i></h4>
+			<div class="well well-sm">
+				<p>Terms of path selection, by selection-graph. </p>
+			</div>
+			<h4>Watch <i class="fa fa-eye"></i></h4>
+			<div class="well well-sm">
+				<p>Tracking and maintain integrity algorithms. Can watch the paths, selectors and selected changes (insert/remove/update) maintain integrity in selected links.</p>
+			</div>
+			<h4>Selector link <i class="fa fa-minus"></i><i class="fa fa-minus"></i><i class="fa fa-minus"></i><i class="fa fa-minus"></i></h4>
+			<div class="well well-sm">
+				<p>These links are created manually. They symbolize the desire-need to select zone in the graph. But are not itself selection.</p>
+				<p>By default, there is no field `_selected` in link-document.</p>
+			</div>
+			<h4>Selected link <i class="fa fa-minus"></i>&nbsp;&nbsp;<i class="fa fa-minus"></i>&nbsp;&nbsp;<i class="fa fa-minus"></i></h4>
+			<div class="well well-sm">
+				<p>These links are created automatically. Do not interfere in the automatic process control these links! These are the fact of selection of a specific document in the graph. In them you can find information about: which way, from whom, and how they were selected.</p>
+				<p>By default, there is field `_selected` in link-document. It contains information about selection of current selected link.</p>
+			</div>
+		</div>
+		<div class="container">
+			<h2 class="text-center">Practice</h2>
+			<h4>Attach</h4>
+			<div class="well well-sm">
+{{# markdown}}
+```js
+paths = new Mongo.Collection('paths');
+paths.attachGraph();
+
+select = new Mongo.Collection('select');
+select.attachGraph();
+Shuttler.Selection(select, { source: 'source' })
+	.byPaths(paths, { sources: ['source'], targets: ['target'] })
+	.watchSelections().watchPaths(paths)
+	.recursionProtection()
+```
+{{/markdown}}
+			</div>
+			<h4>Paths directions <i class="fa fa-arrows-alt"></i></h4>
+			<div class="well well-sm">
+				<p>Selection on the path can pass not only from `source` to the `target`, or vice versa. Path links also can be a selected.</p>
+{{# markdown}}
+```js
+paths = new Mongo.Collection('paths');
+paths.attachGraph();
+
+select = new Mongo.Collection('select');
+select.attachGraph();
+Shuttler.Selection(select, { source: 'source' })
+	// Path direction from target to source and path link.
+	.byPaths(paths, { sources: ['targe'], targets: ['source', 'link'] })
+	.watchSelections().watchPaths(paths)
+	.recursionProtection()
+```
+{{/markdown}}
+			</div>
+			<h4>Selection direction <i class="fa fa-arrows-v"></i></h4>
+			<div class="well well-sm">
+				<p>On selection maintain integrity, what of the selector side will changed in selected links?</p>
+				<p>By default - from source to target. You can define other direction.</p>
+{{# markdown}}
+```js
+paths = new Mongo.Collection('paths');
+paths.attachGraph();
+
+select = new Mongo.Collection('select');
+select.attachGraph();
+// Selection direction revert (from target to source).
+Shuttler.Selection(select, { source: 'target' })
+	.byPaths(paths, { sources: ['source'], targets: ['target'] })
+	.watchSelections().watchPaths(paths)
+	.recursionProtection()
+```
+{{/markdown}}
+			</div>
+			<h4>Multiple paths grahps</h4>
+			<div class="well well-sm">
+{{# markdown}}
+```js
+nesting = new Mongo.Collection('nesting');
+nesting.attachGraph();
+
+owning = new Mongo.Collection('owning');
+owning.attachGraph();
+
+fetching = new Mongo.Collection('fetching');
+fetching.attachGraph();
+Shuttler.Selection(fetching, { source: 'target' })
+	.byPaths(nesting, { sources: ['source'], targets: ['target'] })
+	.byPaths(owning, { sources: ['source'], targets: ['target', 'link'] })
+	.watchSelections().watchPaths(nesting).watchPaths(owning)
+	.recursionProtection()
+```
+{{/markdown}}
+			</div>
+			<h4>Custom logic of selection <i class="fa fa-ban"></i></h4>
+			<div class="well well-sm">
+				<p>In this example, it is impossible to create a link `allow` refer by `target` an element that has a `deny` link.</p>
+				<p>If `deny` changed will always be re-inspection capabilities to create there `allow` link.</p>
+{{# markdown}}
+```js
+paths = new Mongo.Collection('paths');
+paths.attachGraph();
+
+allow = new Mongo.Collection('allow');
+allow.attachGraph();
+allow.selection = Shuttler.Selection(allow, { source: 'target' })
+	.byPaths(paths, { sources: ['source'], targets: ['target'] })
+	.watchSelections().watchPaths(paths)
+	.recursionProtection()
+
+deny = new Mongo.Collection('deny');
+deny.attachGraph();
+deny.selection = Shuttler.Selection(deny, { source: 'target' })
+	.byPaths(paths, { sources: ['source'], targets: ['target'] })
+	.watchSelections().watchPaths(paths)
+	.recursionProtection()
+
+allow.deny({
+    selection: function(target, prev, from, path, selector, selection) {
+        return !!deny.link.find.target(target);
+    }
+});
+
+deny.after.unlink.target(function(userId, unlinked, linked, fieldNames, modifier, options) {
+	if (deny.selection.isSelected(unlinked) && !deny.links.find.target(unlinked._target).count()) {
+		allow.selection.selectTarget(unlinked.target());
+	}
+});
+
+deny.after.link.target(function(userId, unlinked, linked, fieldNames, modifier, options) {
+	if (deny.selection.isSelected(linked)) {
+		allow.selection.unselectTarget(linked.target());
+	}
+});
+```
+{{/markdown}}
+			</div>
+		</div>
+		<div class="well well-sm">
+			<div class="container">
+				<p>The playground for experimentation on selections in graphs.</p>
+				<p>Try this on the playground:</p>
+{{# markdown}}
+```js
+// red similar to deny
+// green similar to allow
+// blue similar to paths
+
+// Insert new green from 10 to 1
+green.link.insert(black.findOne('10'), white.findOne('1'));
+
+// Insert blue path for green selection from 1 to 3.
+blue.link.insert(white.findOne('1'), white.findOne('2'));
+// Congratulations! White 2 selected automatically!
+
+// Insert red selection from 7 to 1
+var temp = red.link.insert(black.findOne('7'), white.findOne('1'));
+// As you can see green have lost the ability to select 1 and 2.
+
+// Move red link from 1 to 2
+red.link.update.target(temp, black.findOne('6'));
+// You see? Green selection again select 1 and 2!
+```
+{{/markdown}}
+			</div>
+		</div>
+		{{> shuttlerEditor editor=editor}}
+	</div>
+</template>
