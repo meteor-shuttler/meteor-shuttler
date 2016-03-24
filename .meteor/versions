@@ -1,6 +1,6 @@
 accounts-base@1.2.2
-aldeed:collection2@2.9.0
-aldeed:collection2-core@1.1.0
+aldeed:collection2@2.9.1
+aldeed:collection2-core@1.1.1
 aldeed:schema-deny@1.0.1
 aldeed:schema-index@1.0.1
 aldeed:simple-schema@1.5.3
@@ -93,7 +93,7 @@ shuttler:editor@0.0.0
 shuttler:graphs@0.0.15
 shuttler:namespace@0.0.4
 shuttler:ref@0.0.5
-shuttler:selection@0.0.3
+shuttler:selection@0.0.5
 simple:highlight.js@1.2.0
 spacebars@1.0.7
 spacebars-compiler@1.0.7

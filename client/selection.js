@@ -20,8 +20,8 @@ green.attachSchema(new SimpleSchema({ _id: { type: String, autoValue: function()
 green.attachGraph();
 editor.queries.insert({ collection: '/selection:green', color: 'green', name: 'green', query: {} });
 green.selection = Shuttler.Selection(green, { source: 'source' })
-	.byPaths(blue, { sources: ['source'], targets: ['target'] })
-	.watchSelections().watchPaths(blue)
+	.byPaths(green, { sources: ['source'], targets: ['target'] })
+	.watchSelections().watchPaths(green)
 	.recursionProtection()
 
 var red = new Mongo.Collection(null, { ref: '/selection:red' });
