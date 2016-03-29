@@ -123,6 +123,9 @@ if (Meteor.isClient) {
 	Template['stars'].onRendered(function() {
 		$(window).on('resize', resize);
 	});
+	Template['stars'].events({
+		load: resize
+	});
 	Template['stars'].onDestroyed(function() {
 		$(window).off('resize', resize);
 	});

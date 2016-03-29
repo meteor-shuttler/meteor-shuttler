@@ -1,0 +1,199 @@
+<template name="/selection">
+	<div class="background"></div>
+	<div class="document">
+		{{> navbar class="navbar-default navbar-fixed-top hidden-xs"}}
+		{{> navbar class="navbar-default opacity-0 hidden-xs"}}
+		{{> navbar class="navbar-default visible-xs-block"}}
+		<br><br>
+	    <div class="container text-center">
+	        <i class="fa fa-5x fa-fw fa-link"></i>
+	        <h1>shuttler:selection</h1>
+	        <p><small><kbd>meteor install shuttler:selection</kbd>@0.0.6</small></p>
+	        <p><a href="https://github.com/meteor-shuttler/selection">GitHub</a> - <a href="atmospherejs.com/shuttler/selection">Atmosphere.js</a></p>
+			<p>Link in a graph as a property. Multiple, controlled, atomically, properties inheritable on graphs.</p>
+	    </div>
+		<div class="well well-sm">
+			<div class="container text-center">
+				A convenient way to maintain indirect links in the graph.
+			</div>
+		</div>
+		<div class="container">
+			<h2 class="text-center">Theory</h2>
+			<h4>Paths <i class="fa fa-minus"></i></h4>
+			<div class="well well-sm">
+				<p>Terms of path selection, by selection-graph. </p>
+			</div>
+			<h4>Watch <i class="fa fa-eye"></i></h4>
+			<div class="well well-sm">
+				<p>Tracking and maintain integrity algorithms. Can watch the paths, selectors and selected changes (insert/remove/update) maintain integrity in selected links.</p>
+			</div>
+			<h4>Selector link <i class="fa fa-minus"></i><i class="fa fa-minus"></i><i class="fa fa-minus"></i><i class="fa fa-minus"></i></h4>
+			<div class="well well-sm">
+				<p>These links are created manually. They symbolize the desire-need to select zone in the graph. But are not itself selection.</p>
+				<p>By default, there is no field `_selected` in link-document.</p>
+			</div>
+			<h4>Selected link <i class="fa fa-minus"></i>&nbsp;&nbsp;<i class="fa fa-minus"></i>&nbsp;&nbsp;<i class="fa fa-minus"></i></h4>
+			<div class="well well-sm">
+				<p>These links are created automatically. Do not interfere in the automatic process control these links! These are the fact of selection of a specific document in the graph. In them you can find information about: which way, from whom, and how they were selected.</p>
+				<p>By default, there is field `_selected` in link-document. It contains information about selection of current selected link.</p>
+			</div>
+		</div>
+		<div class="container">
+			<h2 class="text-center">Practice</h2>
+			<h4>Attach</h4>
+			<div class="well well-sm">
+{{# markdown}}
+```js
+paths = new Mongo.Collection('paths');
+paths.attachGraph();
+
+select = new Mongo.Collection('select');
+select.attachGraph();
+Shuttler.Selection(select, { source: 'source' })
+	.byPaths(paths, { sources: ['source'], targets: ['target'] })
+	.watchSelections().watchPaths(paths)
+	.recursionProtection()
+```
+{{/markdown}}
+			</div>
+			<h4>Paths directions <i class="fa fa-arrows-alt"></i></h4>
+			<div class="well well-sm">
+				<p>Selection on the path can pass not only from `source` to the `target`, or vice versa. Path links also can be a selected.</p>
+{{# markdown}}
+```js
+paths = new Mongo.Collection('paths');
+paths.attachGraph();
+
+select = new Mongo.Collection('select');
+select.attachGraph();
+Shuttler.Selection(select, { source: 'source' })
+	// Path direction from target to source and path link.
+	.byPaths(paths, { sources: ['targe'], targets: ['source', 'link'] })
+	.watchSelections().watchPaths(paths)
+	.recursionProtection()
+```
+{{/markdown}}
+			</div>
+			<h4>Selection direction <i class="fa fa-arrows-v"></i></h4>
+			<div class="well well-sm">
+				<p>On selection maintain integrity, what of the selector side will changed in selected links?</p>
+				<p>By default - from source to target. You can define other direction.</p>
+{{# markdown}}
+```js
+paths = new Mongo.Collection('paths');
+paths.attachGraph();
+
+select = new Mongo.Collection('select');
+select.attachGraph();
+// Selection direction revert (from target to source).
+Shuttler.Selection(select, { source: 'target' })
+	.byPaths(paths, { sources: ['source'], targets: ['target'] })
+	.watchSelections().watchPaths(paths)
+	.recursionProtection()
+```
+{{/markdown}}
+			</div>
+			<h4>Multiple paths grahps</h4>
+			<div class="well well-sm">
+{{# markdown}}
+```js
+nesting = new Mongo.Collection('nesting');
+nesting.attachGraph();
+
+owning = new Mongo.Collection('owning');
+owning.attachGraph();
+
+fetching = new Mongo.Collection('fetching');
+fetching.attachGraph();
+Shuttler.Selection(fetching, { source: 'target' })
+	.byPaths(nesting, { sources: ['source'], targets: ['target'] })
+	.byPaths(owning, { sources: ['source'], targets: ['target', 'link'] })
+	.watchSelections().watchPaths(nesting).watchPaths(owning)
+	.recursionProtection()
+```
+{{/markdown}}
+			</div>
+			<h4>Custom logic of selection <i class="fa fa-ban"></i></h4>
+			<div class="well well-sm">
+				<p>In this example, it is impossible to create a link `allow` refer by `target` an element that has a `deny` link.</p>
+				<p>If `deny` changed will always be re-inspection capabilities to create there `allow` link.</p>
+{{# markdown}}
+```js
+paths = new Mongo.Collection('paths');
+paths.attachGraph();
+
+allow = new Mongo.Collection('allow');
+allow.attachGraph();
+allow.selection = Shuttler.Selection(allow, { source: 'target' })
+	.byPaths(paths, { sources: ['source'], targets: ['target'] })
+	.watchSelections().watchPaths(paths)
+	.recursionProtection()
+
+deny = new Mongo.Collection('deny');
+deny.attachGraph();
+deny.selection = Shuttler.Selection(deny, { source: 'target' })
+	.byPaths(paths, { sources: ['source'], targets: ['target'] })
+	.watchSelections().watchPaths(paths)
+	.recursionProtection()
+
+allow.deny({
+    selection: function(target, prev, from, path, selector, selection) {
+        return !!deny.link.find.target(target);
+    }
+});
+
+deny.after.unlink.target(function(userId, unlinked, linked, fieldNames, modifier, options) {
+	if (deny.selection.isSelected(unlinked) && !deny.links.find.target(unlinked._target).count()) {
+		allow.selection.selectTarget(unlinked.target());
+	}
+});
+
+deny.after.link.target(function(userId, unlinked, linked, fieldNames, modifier, options) {
+	if (deny.selection.isSelected(linked)) {
+		allow.selection.unselectTarget(linked.target());
+	}
+});
+```
+{{/markdown}}
+			</div>
+		</div>
+		<div class="container">
+			<div class="well well-sm">
+				<p>The playground for experimentation on selections in graphs.</p>
+				<p>Try this on the playground:</p>
+{{# markdown}}
+```js
+// red similar to deny
+// green similar to allow
+// blue similar to paths
+
+// Insert new green from 10 to 1
+green.link.insert(black.findOne('10'), white.findOne('1'));
+
+// Insert blue path for green selection from 1 to 2.
+blue.link.insert(white.findOne('1'), white.findOne('2'));
+// Congratulations! White 2 selected automatically!
+
+// Insert red selection from 7 to 1
+var temp = red.link.insert(black.findOne('7'), white.findOne('1'));
+// As you can see green have lost the ability to select 1 and 2.
+
+// Insert blue path for last red selection from 2 to 3.
+blue.link.insert(white.findOne('2'), white.findOne('3'));
+// Congratulations! White 3 selected automatically!
+
+// Move red link from 1 to 2
+red.link.update.target(temp, black.findOne('6'));
+// You see? Green selection again select 1, 2 and 3!
+```
+{{/markdown}}
+			</div>
+		</div>
+		<div class="well well-sm text-center">
+			<div class="container">
+				<h4>Please use the console as in the example <i class="fa fa-angle-double-up"></i></h4>
+			</div>
+		</div>
+		{{> shuttlerEditor editor=editor}}
+	</div>
+</template>

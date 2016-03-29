@@ -1,0 +1,175 @@
+<template name="/graphs">
+	<div class="background"></div>
+	<div class="document">
+		{{> navbar class="navbar-default navbar-fixed-top hidden-xs"}}
+		{{> navbar class="navbar-default opacity-0 hidden-xs"}}
+		{{> navbar class="navbar-default visible-xs-block"}}
+		<br><br>
+	    <div class="container text-center">
+	        <i class="fa fa-5x fa-fw fa-share-alt fa-rotate-90"></i>
+	        <h1>shuttler:graphs</h1>
+	        <p><small><kbd>meteor install shuttler:graphs</kbd>@0.0.14</small></p>
+	        <p><a href="https://github.com/meteor-shuttler/graphs">GitHub</a> - <a href="atmospherejs.com/shuttler/graphs">Atmosphere.js</a></p>
+			<p>Oriented graph methods with shema and restrictions.</p>
+	    </div>
+		<div class="well well-sm">
+			<div class="container text-center">
+				User-friendly interface methods, helpers, hooks and restrictions to control the links in meteor mongo.
+			</div>
+		</div>
+		<div class="container">
+			<h2 class="text-center">Theory</h2>
+			<h4>Documents <i class="fa fa-circle"></i></h4>
+			<div class="well well-sm">
+				<p>With <kbd><a href="https://github.com/meteor-shuttler/ref">shuttler:ref</a></kbd> package, any document can be in graph.</p>
+			</div>
+			<h4>Links <i class="fa fa-circle-o"></i><i class="fa fa-long-arrow-right" style="position: relative; left: 0.35em;"></i><i class="fa fa-circle"></i><i class="fa fa-long-arrow-right" style="position: relative; right: 0.25em;"></i><i class="fa fa-circle-o"></i></h4>
+			<div class="well well-sm">
+				<p>The documents in graph-collection called links.</p>
+				<p>They always have 2 field-references: <kbd>link._source</kbd> and <kbd>link._target</kbd>.</p>
+				<p>Link is also a document, and to it can also be referenced.</p>
+				<p>There are no restrictions on the creation of your custom fields in the graph collections. It is only necessary to attach schema using <a href="https://github.com/aldeed/meteor-collection2">aldeed:collection2</a> package.</p>
+			</div>
+		</div>
+		<div class="container">
+			<h2 class="text-center">Practice</h2>
+			<h4>Attach</h4>
+			<div class="well well-sm">
+{{# markdown}}
+```js
+links = new Mongo.Collection('links');
+links.attachGraph();
+```
+{{/markdown}}
+			</div>
+		</div>
+		<div class="container">
+			<h4>References </h4>
+			<div class="well well-sm">
+				<p>As a reference for the creation of communication can act as a `Rel` document and the document itself.</p>
+{{# markdown}}
+```js
+documents = new Mongo.Collection('documents');
+var a = documents.findOne(documents.insert({ _id: '1' }));
+var b = documents.findOne(documents.insert({ _id: '2' }));
+links.link.insert(a, b);
+var link = links.link.insert(a.Ref(), b.Ref());
+links.link.update(link, b, a);
+```
+{{/markdown}}
+				<br>
+				<ul>
+					<li><kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkinsert">links.link.insert</a></kbd></li>
+					<li><kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkupdate">links.link.update</a></kbd></li>
+				</ul>
+			</div>
+		</div>
+		<div class="container">
+			<h4>Helpers <a href="https://github.com/meteor-shuttler/graphs#helpers"><i class="fa fa-fw fa-github"></i></a></h4>
+			<div class="well well-sm">
+				<p>For ease of reference, you can use helpers: <kbd>a<a href="https://github.com/meteor-shuttler/graphs#documentsource">link.source()</a></kbd> and <kbd><a href="https://github.com/meteor-shuttler/graphs#documenttarget">link.target()</a></kbd>. They return a document that is referenced by this field from any collection.</p>
+{{# markdown}}
+```js
+var link = links.link.find(a, b);
+link.source();
+// { _id: '1' }
+link.target();
+// { _id: '2' }
+```
+{{/markdown}}
+			</div>
+		</div>
+		<div class="container">
+			<h4>Searching <a href="https://github.com/meteor-shuttler/graphs#collectionlinkfind"><i class="fa fa-fw fa-github"></i></a></h4>
+			<div class="well well-sm">
+				<p>Handy methods for finding links.</p>
+{{# markdown}}
+```js
+links.link.find(a, b);
+// { _id: String, _source: { id: '1', collection: 'documents' }, _source: { id: '2', collection: 'documents' } }
+links.link.find(a.Ref(), b.Ref());
+// { _id: String, _source: { id: '1', collection: 'documents' }, _source: { id: '2', collection: 'documents' } }
+links.link.find('1', '2');
+// { _id: String, _source: { id: '1', collection: 'documents' }, _source: { id: '2', collection: 'documents' } }
+links.links.find('1', '2').count();
+// 2
+links.links.find.target(b);
+// { _id: String, _source: { id: '1', collection: 'documents' }, _source: { id: '2', collection: 'documents' } }
+```
+{{/markdown}}
+				<br>
+				<ul>
+					<li><kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfind">links.link.find</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindto">links.link.find.to</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindtarget">links.link.find.target</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindfrom">links.link.find.from</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindsource">links.link.find.source</a></kbd></li>
+					<li><kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfind">links.link.findOne</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindto">links.link.findOne.to</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindtarget">links.link.findOne.target</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindfrom">links.link.findOne.from</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinkfindsource">links.link.findOne.source</a></kbd></li>
+					<li><kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinksfind">links.links.find</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinksfindto">links.links.find.to</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinksfindtarget">links.links.find.target</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinksfindfrom">links.links.find.from</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionlinksfindsource">links.links.find.source</a></kbd></li>
+				</ul>
+			</div>
+		</div>
+		<div class="container">
+			<h4>Hooks <a href="https://github.com/meteor-shuttler/graphs#hooks"><i class="fa fa-fw fa-github"></i></a></h4>
+			<div class="well well-sm">
+				<p>With <kbd><a href="https://github.com/matb33/meteor-collection-hooks">matb33:collection-hooks</a></kbd> package you can listen to the changes immediately after they are made.</p>
+{{# markdown}}
+```js
+links.after.link(function(userId, unlinked, linked, fieldNames, modifier, options) {
+	console.log(unlinked, linked);
+});
+var link = links.link.insert(a, b);
+// String
+// undefined, { _id: String, _source: { id: '1', collection: 'documents' }, _source: { id: '2', collection: 'documents' } }
+links.link.update(link, b, a);
+// 1
+// { _id: String, _source: { id: '1', collection: 'documents' }, _source: { id: '2', collection: 'documents' } }, { _id: String, _source: { id: '2', collection: 'documents' }, _source: { id: '1', collection: 'documents' } }
+links.remove(link._id);
+// 1
+// { _id: String, _source: { id: '2', collection: 'documents' }, _source: { id: '1', collection: 'documents' } }, undefined
+```
+{{/markdown}}
+				<br>
+				<ul>
+					<li><kbd><a href="https://github.com/meteor-shuttler/graphs#collectionafterunlink">links.after.link</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionafterlinksource">links.after.link.source</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionafterlinktarget">links.after.link.target</a></kbd></li>
+					<li><kbd><a href="https://github.com/meteor-shuttler/graphs#collectionafterunlink">links.after.unlink</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionafterunlinksource">links.after.unlink.source</a></kbd> <kbd><a href="https://github.com/meteor-shuttler/graphs#collectionafterunlinktarget">links.after.unlink.target</a></kbd></li>
+				</ul>
+			</div>
+		</div>
+		<div class="container text-center">
+			<h2>Example</h2>
+		</div>
+		<div class="container">
+			<div class="well well-sm">
+				The playground for experimentation on graphs. All collections are available in the browser console, under the same names. You can perform any operations with them! Code of generated documents and links was printed to the console. You can try any methods/hooks/helpers.
+				<h4>Definition of collections and graphs in this playground:</h4>
+{{#markdown}}
+```js
+var white = new Mongo.Collection(null, { ref: '/graphs:white' });
+
+var black = new Mongo.Collection(null, { ref: '/graphs:black' });
+
+var blue = new Mongo.Collection(null, { ref: '/graphs:blue' });
+blue.attachGraph();
+
+var green = new Mongo.Collection(null, { ref: '/graphs:green' });
+green.attachGraph();
+
+var red = new Mongo.Collection(null, { ref: '/graphs:red' });
+red.attachGraph();
+```
+{{/markdown}}
+				<h4>You can start with these functions:</h4>
+{{#markdown}}
+```js
+blue.link.insert(white.findOne('5'), black.findOne('6'));
+red.link.insert(red.findOne('12'), white.findOne('2'));
+green.remove('13');
+```
+{{/markdown}}
+			</div>
+		</div>
+		<div class="well well-sm text-center">
+			<div class="container">
+				<h4>Please use the console as in the example <i class="fa fa-angle-double-up"></i></h4>
+			</div>
+		</div>
+		{{> shuttlerEditor editor=editor}}
+	</div>
+</template>

@@ -7,16 +7,15 @@
 				<li class="{{isActivePath '/selection'}}"><a href="/selection"><i class="fa fa-fw fa-link"></i> Selection</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li>
-					{{#dropdownTrigger name="github" on="hover" timeout=250}}
+				{{#Drop trigger='tooltip' direction='bottom' position=0.75 alignment=1}}
+					<li>
 						<a href="https://github.com/meteor-shuttler"><i class="fa fa-fw fa-github"></i> GitHub</a>
-					{{/dropdownTrigger}}
-					{{#dropdownBootstrap name="github" direction="s" align="right"}}
-						<div class="popover-content" style="width: 220px;">
-						    All our packages, and technical documentations.
-					    </div>
-					{{/dropdownBootstrap}}
-				</li>
+					</li>
+				{{else}}
+					<div class="popover-content" style="width: 220px;">
+					    All our packages, and technical documentations.
+				    </div>
+				{{/Drop}}
 			</ul>
 		</div>
 	</nav>
