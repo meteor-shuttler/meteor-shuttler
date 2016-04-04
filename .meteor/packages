@@ -36,3 +36,11 @@ templ:drop
 aldeed:console-helpers
 standard-minifier-css
 standard-minifier-js
+accounts-password
+accounts-google
+aldeed:autoform
+bootswatch:paper
+aldeed:delete-button
+mizzao:jquery-ui
+easy:search
+shuttler:groups-ui

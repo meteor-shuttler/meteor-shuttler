@@ -10,3 +10,6 @@ Router.route('/selection', function() {
 Router.route('/trees', function() {
 	this.render('/trees');
 });
+Router.route('/groups', function() {
+	this.render('/groups');
+});
