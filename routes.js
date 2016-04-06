@@ -10,6 +10,9 @@ Router.route('/selection', function() {
 Router.route('/trees', function() {
 	this.render('/trees');
 });
-Router.route('/groups', function() {
-	this.render('/groups');
+
+Meteor.methods({
+	ecmascript: function(str) {
+		return str+str;
+	}
 });
