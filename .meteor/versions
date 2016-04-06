@@ -122,7 +122,7 @@ shuttler:editor@0.0.0
 shuttler:graphs@0.0.15
 shuttler:namespace@0.0.5
 shuttler:ref@0.0.5
-shuttler:selection@0.0.7
+shuttler:selection@0.0.6
 simple:highlight.js@1.2.0
 spacebars@1.0.10
 spacebars-compiler@1.0.10
