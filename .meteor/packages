@@ -26,8 +26,6 @@ fortawesome:fontawesome
 markdown
 simple:highlight.js
 shuttler:editor
-lookback:dropdowns
-ivansglazunov:dropdowns-bootstrap-3
 d3js:d3
 shuttler:selection
 aldeed:collection2
