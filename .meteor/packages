@@ -34,3 +34,4 @@ templ:drop
 aldeed:console-helpers
 standard-minifier-css
 standard-minifier-js
+aldeed:template-extension
