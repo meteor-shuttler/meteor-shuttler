@@ -3,7 +3,7 @@ if (Meteor.isClient) {
 		particlesJS("stars", {
 			"particles": {
 				"number": {
-					"value": 246,
+					"value": is.mobile()?70:246,
 					"density": {
 						"enable": false,
 						"value_area": 1972.8691040806818

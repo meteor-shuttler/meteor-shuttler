@@ -35,3 +35,4 @@ aldeed:console-helpers
 standard-minifier-css
 standard-minifier-js
 aldeed:template-extension
+isjs:is
