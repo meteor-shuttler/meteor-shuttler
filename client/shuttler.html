@@ -65,12 +65,29 @@
 			<div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
 				<div class="well well-sm">
 					<h4>
-						<i class="fa fa-fw fa-share-alt fa-rotate-90"></i> Graphs <small><kbd>meteor install shuttler:graphs</kbd>@0.0.15</small>
+						<i class="fa fa-fw fa-share-alt fa-rotate-90"></i> Graphs <small><kbd>meteor install shuttler:graphs</kbd>@0.0.16</small>
 					</h4>
 					<p>
 						<a href="/graphs">Examples</a> - <a href="https://github.com/meteor-shuttler/graphs">GitHub</a> - <a href="atmospherejs.com/shuttler/graphs">Atmosphere.js</a>
 					</p>
 					<p>Oriented graph methods with schema and restrictions.</p>
+				</div>
+				<div class="well well-sm">
+					<h4>
+						<i class="fa fa-fw fa-bookmark-o"></i> Graph Marking <small><kbd>meteor install shuttler:graph-marking</kbd>@0.0.1</small>
+					</h4>
+					<p>
+						<a href="https://github.com/meteor-shuttler/graph-marking">GitHub</a> - <a href="atmospherejs.com/shuttler/graph-marking">Atmosphere.js</a>
+					</p>
+					<p>Marking documents if has link in the graph.</p>
+{{#markdown}}
+```js
+Shuttler.GraphMarking(graph, 'children', Shuttler.GraphMarking.byTarget).in(documents, '__graph');
+graph.link.insert(documents.findOne('1'), documents.findOne('2'));
+documents.findOne('2');
+// { _id: '2', __graph: [{ id: '1', collection: 'documents'}] }
+```
+{{/markdown}}
 				</div>
 				<div class="well well-sm">
 					<h4>
@@ -80,6 +97,23 @@
 						<a href="/selection">Examples</a> - <a href="https://github.com/meteor-shuttler/selection">GitHub</a> - <a href="atmospherejs.com/shuttler/selection">Atmosphere.js</a>
 					</p>
 					<p>Link in a graph as a property. Multiple, controlled, atomically, properties inheritable on graphs.</p>
+				</div>
+				<div class="well well-sm">
+					<h4>
+						<i class="fa fa-fw fa-bookmark"></i> Selection Marking <small><kbd>meteor install shuttler:selection-marking</kbd>@0.0.1</small>
+					</h4>
+					<p>
+						<a href="https://github.com/meteor-shuttler/selection-marking">GitHub</a> - <a href="atmospherejs.com/shuttler/selection-marking">Atmosphere.js</a>
+					</p>
+					<p>Marking documents if has selected link in the graph.</p>
+{{#markdown}}
+```js
+selection.marking('children', Shuttler.GraphMarking.bySelectedTarget).in(documents, '__graph');
+graph.link.insert(documents.findOne('1'), documents.findOne('2'));
+documents.findOne('2');
+// { _id: '2', __graph: [{ id: '1', collection: 'documents'}] }
+```
+{{/markdown}}
 				</div>
 				<div class="well well-sm">
 					<h4>
@@ -98,7 +132,7 @@ Shuttler.Ref(ref); // document
 				</div>
 				<div class="well well-sm">
 					<h4>
-						<i class="fa fa-fw fa-list"></i> Collection <small><kbd>meteor install shuttler:collection</kbd>@0.0.4</small>
+						<i class="fa fa-fw fa-list"></i> Collection <small><kbd>meteor install shuttler:collection</kbd>@0.0.5</small>
 					</h4>
 					<p>
 						<a href="https://github.com/meteor-shuttler/collection">GitHub</a> - <a href="atmospherejs.com/shuttler/collection">Atmosphere.js</a>
