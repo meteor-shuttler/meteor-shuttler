@@ -96,7 +96,7 @@ session@1.1.4
 shuttler:collection@0.0.5
 shuttler:editor@0.0.0
 shuttler:graph-marking@0.0.1
-shuttler:graphs@0.0.16
+shuttler:graphs@0.0.17
 shuttler:namespace@0.0.5
 shuttler:ref@0.0.5
 shuttler:selection@0.0.9
